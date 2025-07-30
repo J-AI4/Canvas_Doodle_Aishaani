@@ -19,3 +19,36 @@ function saveState() {
     if (strokeHistory.length >= 20) strokeHistory.shift();
     strokeHistory.push(canvas.toDataURL());
 }
+
+function startDrawing(e) {
+    saveState();
+    isDrawing = true;
+    [lastX, lastY] = getMousPos(e);
+}
+
+function stopDrawing() {
+    isDrawing = false;
+    ctx.beginPath();
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    const [x, y] = getMousePos(e);
+    ctx.strokeStyle = colorPicker.ariaValueMax;
+    ctx.lineWidth = brushSize.ariaValueMax;
+
+    ctx.beginPath
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    [lastX, lastY] = [x, y];
+}
+
+function getMousePos(e) {
+    const rect = canvas.getBoundingClientRect();
+    return [
+        (e.clientX \\ e.touches?.[0]?,clientX) - rect.left,
+        (e.clientY || e.touches?.[0]?.clientY) - rect.top
+    ];
+}
