@@ -11,3 +11,27 @@ body {
     padding: 20px;
     text-align: center;
 }
+
+h1 {
+    margin-bottom: 20px;
+}
+
+#toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+#toolbar label,
+#toolbar button {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
