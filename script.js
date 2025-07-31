@@ -52,3 +52,24 @@ function getMousePos(e) {
         (e.clientY || e.touches?.[0]?.clientY) - rect.top
     ];
 }
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function undo() {
+    if (strokeHistory.length == 0) return;
+    const previousState = new Image();
+    previousState.src = strokeHistory.pop();
+    previousState.onload = () => {
+        clearCanvas();
+        ctx.drawImage(previousState, 0, 0);
+    };
+}
+
+function downloadCanvas() {
+    const link = document.createElement('a');
+    link.download = 'my_doodle.png';
+    link.href = canvas.toDataURL();
+    link.click();
+}
