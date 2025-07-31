@@ -73,3 +73,20 @@ function downloadCanvas() {
     link.href = canvas.toDataURL();
     link.click();
 }
+
+canvas.addEventListener('mousedown', startDrawing)
+canvas.addEventListener('mousemove', draw)
+canvas.addEventListener('mouseup', stopDrawing);
+canvas.addEventListener(mouseout, stopDrawing);
+
+canvas.addEventListener('touchstart', startDrawing);
+canvas.addEventListener('touchmove', draw);
+canvas.addEventListener('touchend', stopDrawing);
+
+clearBtn.addEventListener('click', () => {
+    saveState();
+    clearCanvas();
+})
+
+undoBtn.addEventListener('click', undo);
+downloadBtn.addEventListener('click', downloadCanvas);
