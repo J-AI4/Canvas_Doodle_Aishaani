@@ -1,6 +1,7 @@
+
 const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d');
-
+const eraserBtn = document.getElementById('eraserBtn');
 const colorPicker = document.getElementById('colorPicker');
 const brushSize = document.getElementById('brushSize');
 const clearBtn = document.getElementById('clearBtn');
@@ -8,12 +9,17 @@ const undoBtn = document.getElementById('undoBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 
 let isDrawing = false;
+let isEraser = false;
 let lastX = 0;
 let lastY = 0;
 let strokeHistory = [];
 
 ctx.lineCap = 'round';
 ctx.lineJoin = 'round';
+
+eraserBtn.addEventListener(click, () +> {
+
+})
 
 function saveState() {
     if (strokeHistory.length >= 20) strokeHistory.shift();
@@ -34,10 +40,10 @@ function stopDrawing() {
 function draw(e) {
     if (!isDrawing) return;
     const [x, y] = getMousePos(e);
-    ctx.strokeStyle = colorPicker.ariaValueMax;
-    ctx.lineWidth = brushSize.ariaValueMax;
+    ctx.strokeStyle = colorPicker.value;
+    ctx.lineWidth = brushSize.value;
 
-    ctx.beginPath
+    ctx.beginPath();
     ctx.moveTo(lastX, lastY);
     ctx.lineTo(x, y);
     ctx.stroke();
