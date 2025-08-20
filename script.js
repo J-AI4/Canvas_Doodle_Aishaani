@@ -23,7 +23,7 @@ function saveState() {
 function startDrawing(e) {
     saveState();
     isDrawing = true;
-    [lastX, lastY] = getMousPos(e);
+    [lastX, lastY] = getMousePos(e);
 }
 
 function stopDrawing() {
@@ -48,7 +48,7 @@ function draw(e) {
 function getMousePos(e) {
     const rect = canvas.getBoundingClientRect();
     return [
-        (e.clientX \\ e.touches?.[0]?,clientX) - rect.left,
+        (e.clientX || e.touches?.[0]?.clientX) - rect.left,
         (e.clientY || e.touches?.[0]?.clientY) - rect.top
     ];
 }
@@ -77,7 +77,7 @@ function downloadCanvas() {
 canvas.addEventListener('mousedown', startDrawing)
 canvas.addEventListener('mousemove', draw)
 canvas.addEventListener('mouseup', stopDrawing);
-canvas.addEventListener(mouseout, stopDrawing);
+canvas.addEventListener('mouseout', stopDrawing);
 
 canvas.addEventListener('touchstart', startDrawing);
 canvas.addEventListener('touchmove', draw);
