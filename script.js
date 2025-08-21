@@ -1,12 +1,13 @@
 
 const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d');
-const eraserBtn = document.getElementById('eraserBtn');
+
 const colorPicker = document.getElementById('colorPicker');
 const brushSize = document.getElementById('brushSize');
 const clearBtn = document.getElementById('clearBtn');
 const undoBtn = document.getElementById('undoBtn');
 const downloadBtn = document.getElementById('downloadBtn');
+const eraserBtn = document.getElementById('eraserBtn');
 
 let isDrawing = false;
 let isEraser = false;
@@ -16,10 +17,6 @@ let strokeHistory = [];
 
 ctx.lineCap = 'round';
 ctx.lineJoin = 'round';
-
-eraserBtn.addEventListener(click, () +> {
-
-})
 
 function saveState() {
     if (strokeHistory.length >= 20) strokeHistory.shift();
@@ -40,7 +37,15 @@ function stopDrawing() {
 function draw(e) {
     if (!isDrawing) return;
     const [x, y] = getMousePos(e);
-    ctx.strokeStyle = colorPicker.value;
+
+    if (isEraser) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.strokeStyle = 'rgba(0,0,0,1)';
+    } else {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = colorPicker.value;
+    }
+
     ctx.lineWidth = brushSize.value;
 
     ctx.beginPath();
@@ -49,6 +54,7 @@ function draw(e) {
     ctx.stroke();
 
     [lastX, lastY] = [x, y];
+
 }
 
 function getMousePos(e) {
@@ -93,6 +99,11 @@ clearBtn.addEventListener('click', () => {
     saveState();
     clearCanvas();
 })
+
+eraserBtn.addEventListener('click', () => {
+    isEraser = !isEraser;
+    eraserBtn.style.backgroundColor = isEraser ? '#ddd' : '#fff';
+});
 
 undoBtn.addEventListener('click', undo);
 downloadBtn.addEventListener('click', downloadCanvas);
