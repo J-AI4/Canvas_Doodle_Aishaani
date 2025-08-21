@@ -8,9 +8,11 @@ const clearBtn = document.getElementById('clearBtn');
 const undoBtn = document.getElementById('undoBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 const eraserBtn = document.getElementById('eraserBtn');
+const fillBtn = document.getElementById('fillBtn');
 
 let isDrawing = false;
 let isEraser = false;
+let isFill = false;
 let lastX = 0;
 let lastY = 0;
 let strokeHistory = [];
@@ -86,6 +88,29 @@ function downloadCanvas() {
     link.click();
 }
 
+function hexToRgba(hex) {
+    hex = hex.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(h => h + h).join('');
+    const bigint = parseInt(hex, 16);
+    return [
+        (bigint >> 16) & 255,
+        (bigint >> 8) & 255,
+        bigint & 255,
+        255
+    ];
+}
+
+function colorsMatch(a, b) {
+    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+}
+
+function floodFill(startX, startY, fillColor) {
+    const imgData = ctx.getimgdata(0, 0, canvaswidth, canvasheight);
+    const data = imgData.data;
+    const width = imgData.width;
+    const height = imgData.height;
+}
+
 canvas.addEventListener('mousedown', startDrawing)
 canvas.addEventListener('mousemove', draw)
 canvas.addEventListener('mouseup', stopDrawing);
@@ -103,6 +128,22 @@ clearBtn.addEventListener('click', () => {
 eraserBtn.addEventListener('click', () => {
     isEraser = !isEraser;
     eraserBtn.style.backgroundColor = isEraser ? '#ddd' : '#fff';
+});
+
+fillBtn.addEventListener('click', () => {
+    isFill = !isFill;
+    isEraser = false;
+    fillBtn.style.backgroundColor = isFill ? '#ddd' : '#fff';
+    eraserBtn.style.backgroundColor = '#fff';
+});
+
+canvas.addEventListener('click', (e) => {
+    if (isFill) {
+        saveState();
+        const [x, y] = getMousePos(e);
+        const fillColor = hexToRgba(colorPicker.value);
+        floodFill(Math.floor(x), Math.floor(y), fillColor);
+    }
 });
 
 undoBtn.addEventListener('click', undo);
