@@ -105,10 +105,48 @@ function colorsMatch(a, b) {
 }
 
 function floodFill(startX, startY, fillColor) {
-    const imgData = ctx.getimgdata(0, 0, canvaswidth, canvasheight);
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imgData.data;
     const width = imgData.width;
     const height = imgData.height;
+
+    const stack = [[startX, startY]];
+    const startPos = (startY * width + startX) * 4;
+    const startColor = [
+        data[startPos],
+        data[startPos + 1],
+        data[startPos + 2],
+        data[startPos + 3]
+    ];
+
+    if (colorsMatch(startColor, fillColor)) return;
+
+    while (stack.length) {
+        const [x, y] = stack.pop();
+        if (x < 0 || y < 0 || x >= width || y >= height) continue;
+
+        const pos = (y * width + x) * 4;
+        const currentColor = [
+            data[pos],
+            data[pos + 1],
+            data[pos + 2],
+            data[pos + 3]
+        ];
+
+        if (colorsMatch(currentColor, startColor)) {
+            data[pos] = fillColor[0];
+            data[pos + 1] = fillColor[1];
+            data[pos + 2] = fillColor[2];
+            data[pos + 3] = fillColor[3];
+
+            stack.push([x + 1, y]);
+            stack.push([x - 1, y]);
+            stack.push([x, y + 1]);
+            stack.push([x, y - 1]);
+        }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
 }
 
 canvas.addEventListener('mousedown', startDrawing)
